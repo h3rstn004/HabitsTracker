@@ -10,16 +10,22 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @Query private var items: [ItemList]
 
     var body: some View {
         NavigationSplitView {
             List {
-                ForEach(items) { item in
+                ForEach(items) { itemList in
                     NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
+                        DetailView(itemList: itemList)
                     } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                        VStack(alignment: .leading) {
+                            Text(itemList.title)
+                                .font(.headline)
+                            Text(itemList.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
                 .onDelete(perform: deleteItems)
@@ -36,12 +42,14 @@ struct ContentView: View {
             }
         } detail: {
             Text("Select an item")
+                .font(.title3)
+                .foregroundColor(.secondary)
         }
     }
 
     private func addItem() {
         withAnimation {
-            let newItem = Item(timestamp: Date())
+            let newItem = ItemList(timestamp: Date(), title: "New Habit")
             modelContext.insert(newItem)
         }
     }
@@ -55,7 +63,94 @@ struct ContentView: View {
     }
 }
 
+struct DetailView: View {
+    @Environment(\.modelContext) private var modelContext
+    var itemList: ItemList
+
+    @State private var newTaskTitle: String = ""
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(itemList.title)
+                .font(.largeTitle)
+                .bold()
+
+            Text(itemList.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+
+            Divider()
+
+            List {
+                ForEach(getTasks(for: itemList)) { task in
+                    HStack {
+                        Button(action: {
+                            toggleFinished(task: task)
+                        }) {
+                            Image(systemName: task.finished ? "checkmark.circle.fill" : "circle")
+                                .foregroundColor(task.finished ? .green : .secondary)
+                        }
+                        .buttonStyle(.plain)
+
+                        Text(task.title)
+                            .strikethrough(task.finished, color: .gray)
+                            .foregroundColor(task.finished ? .gray : .primary)
+                    }
+                }
+            }
+
+            HStack {
+                TextField("New Task", text: $newTaskTitle)
+                    .textFieldStyle(.roundedBorder)
+
+                Button("Add") {
+                    addTask()
+                }
+                .disabled(newTaskTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
+            .padding(.horizontal)
+        }
+        .padding()
+    }
+
+    private func getTasks(for item: ItemList) -> [TaskItem] {
+        var tasks: [TaskItem] = []
+        var current = item.task
+        while let t = current {
+            tasks.append(t)
+            current = t.nextTask
+        }
+        return tasks
+    }
+
+    private func addTask() {
+        let trimmedTitle = newTaskTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedTitle.isEmpty else { return }
+
+        withAnimation {
+            let newTask = TaskItem()
+            modelContext.insert(newTask)
+
+            if let lastTask = getTasks(for: itemList).last {
+                lastTask.nextTask = newTask
+            } else {
+                itemList.task = newTask
+            }
+            newTask.nextTask = nil
+            newTask.itemList = itemList
+
+            newTaskTitle = ""
+        }
+    }
+
+    private func toggleFinished(task: TaskItem) {
+        withAnimation {
+            task.finished.toggle()
+        }
+    }
+}
+
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        .modelContainer(for: [ItemList.self, TaskItem.self], inMemory: true)
 }
