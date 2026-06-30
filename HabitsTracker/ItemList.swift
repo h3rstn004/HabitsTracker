@@ -37,8 +37,4 @@ final class ItemList {
             }
         }
     }
-    
-    public func addTask(task: SubTask) {
-        self.task = SubTask
-    }
 }
