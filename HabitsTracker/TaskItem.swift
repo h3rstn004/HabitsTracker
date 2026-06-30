@@ -14,8 +14,8 @@ final class TaskItem {
     var finished: Bool
     var nextTask: TaskItem?
     
-    init(title: String, finished: Bool) {
-        self.title = title
+    init() {
+        self.title = ""
         self.finished = false
         self.nextTask = nil
     }
