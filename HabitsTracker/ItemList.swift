@@ -17,7 +17,7 @@ final class ItemList {
     
     init(timestamp: Date, title: String) {
         self.timestamp = timestamp
-        self.title = ""
+        self.title = title
         self.taskhead = nil
         self.tasktail = nil
     }
