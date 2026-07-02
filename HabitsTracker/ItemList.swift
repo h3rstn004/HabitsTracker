@@ -22,15 +22,16 @@ final class ItemList {
         self.tasktail = nil
     }
     
+    //Insert at the beggining
     public func addTaskToChain(_ title: String) {
         let newTask = TaskItem(title: title)
-        if let tail = tasktail {
-            newTask.previousTask = tail
-            tail.nextTask = newTask
+        if let taskhead {
+            newTask.nextTask = taskhead
+            taskhead.previousTask = newTask
         } else {
-            taskhead = newTask
             tasktail = newTask
         }
+        self.taskhead = newTask
     }
 
     public func progressPercentage() -> Double {
