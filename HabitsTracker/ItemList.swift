@@ -76,4 +76,17 @@ final class ItemList {
         }
         return totalTask
     }
+    
+    //Returns the completed tasks as a list
+    public func tasksCompleted() -> [TaskItem] {
+        var tasks: [TaskItem] = []
+        var currentTask: TaskItem? = tasktail
+        while let task = currentTask {
+            if task.finished {
+                tasks.append(task)
+            }
+            currentTask = task.nextTask
+        }
+        return tasks
+    }
 }
