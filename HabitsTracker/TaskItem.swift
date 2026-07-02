@@ -36,6 +36,10 @@ final class TaskItem {
         return self.nextTask?.title
     }
     
+    public func getPreviousTask() -> String?{
+        return self.previousTask?.title
+    }
+    
     public func giveXp() -> Int {
         if self.finished {
             return self.xpReward
