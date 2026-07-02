@@ -47,6 +47,10 @@ final class ItemList {
             currentTask = task.nextTask
         }
         percentage = progress / totalTask
-        return percentage
+        return percentage * 100
+    }
+    
+    public func isCompleted() -> Bool {
+        return progressPercentage() == 100
     }
 }
