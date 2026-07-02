@@ -53,4 +53,17 @@ final class ItemList {
     public func isCompleted() -> Bool {
         return progressPercentage() == 100
     }
+    
+    public func totalXP() -> Int {
+        var totalXP: Int = 0
+        var xpReward: Int = 0
+        var currentTask: TaskItem? = tasktail
+        
+        while let task = currentTask {
+            xpReward = task.giveXp()
+            totalXP += xpReward
+            currentTask = task.nextTask
+        }
+        return totalXP
+    }
 }
