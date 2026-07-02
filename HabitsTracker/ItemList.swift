@@ -66,4 +66,14 @@ final class ItemList {
         }
         return totalXP
     }
+    
+    public func totalTasks() -> Int {
+        var totalTask: Int = 0
+        var currentTask: TaskItem? = tasktail
+        while let task = currentTask {
+            totalTask += 1
+            currentTask = task.nextTask
+        }
+        return totalTask
+    }
 }
