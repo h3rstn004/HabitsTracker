@@ -32,4 +32,20 @@ final class ItemList {
             tasktail = newTask
         }
     }
+
+    public func progressPercentage() -> Double {
+        var totalTask: Double = 0
+        var progress: Double = 0
+        var percentage: Double = 0
+        var currentTask: TaskItem? = tasktail
+        while let task = currentTask {
+            if task.finished {
+                progress += task.finished ? 1 : 0
+                totalTask += 1
+            }
+            currentTask = task.nextTask
+        }
+        percentage = progress / totalTask
+        return percentage
+    }
 }
