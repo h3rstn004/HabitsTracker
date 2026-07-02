@@ -12,29 +12,24 @@ import SwiftData
 final class ItemList {
     var timestamp: Date
     var title: String
-    var tasklist: TaskItem?
+    var taskhead: TaskItem?
+    var tasktail: TaskItem?
     
     init(timestamp: Date, title: String) {
         self.timestamp = timestamp
         self.title = ""
-        self.tasklist = nil
+        self.taskhead = nil
+        self.tasktail = nil
     }
     
-    public func addTaskToChain(_ newTask: TaskItem) {
-        if self.tasklist == nil {
-            self.tasklist = newTask
+    public func addTaskToChain(_ title: String) {
+        let newTask = TaskItem(title: title)
+        if let tail = tasktail {
+            newTask.previousTask = tail
+            tail.nextTask = newTask
         } else {
-            addTaskRecursive(self.tasklist, newTask)
-        }
-    }
-
-    private func addTaskRecursive(_ current: TaskItem?, _ newTask: TaskItem) {
-        if let currentTask = current {
-            if currentTask.nextTask == nil {
-                currentTask.nextTask = newTask
-            } else {
-                addTaskRecursive(currentTask.nextTask, newTask)
-            }
+            taskhead = newTask
+            tasktail = newTask
         }
     }
 }

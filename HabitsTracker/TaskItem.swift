@@ -13,12 +13,14 @@ final class TaskItem {
     var title: String
     var finished: Bool
     var nextTask: TaskItem?
+    weak var previousTask: TaskItem?
     var xpReward: Int
     
-    init() {
-        self.title = ""
+    init(title: String) {
+        self.title = title
         self.finished = false
         self.nextTask = nil
+        self.previousTask = nil
         self.xpReward = 25
     }
 
