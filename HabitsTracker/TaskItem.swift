@@ -19,11 +19,7 @@ final class TaskItem {
         self.finished = false
         self.nextTask = nil
     }
-    
-    public func setName(newName: String) {
-        self.title = newName
-    }
-    
+
     public func setState() {
         self.finished.toggle()
     }
