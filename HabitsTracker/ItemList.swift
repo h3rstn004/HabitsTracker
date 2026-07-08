@@ -102,4 +102,14 @@ final class ItemList {
         }
         return tasks
     }
+    
+    public func taskList() -> [TaskItem] {
+        var tasks: [TaskItem] = []
+        var currentTask: TaskItem? = tasktail
+        while let task = currentTask {
+            tasks.append(task)
+            currentTask = task.nextTask
+        }
+        return tasks
+    }
 }
