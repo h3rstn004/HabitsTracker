@@ -40,9 +40,9 @@ final class ItemList {
         var percentage: Double = 0
         var currentTask: TaskItem? = tasktail
         while let task = currentTask {
+            totalTask += 1
             if task.finished {
                 progress += task.finished ? 1 : 0
-                totalTask += 1
             }
             currentTask = task.nextTask
         }
