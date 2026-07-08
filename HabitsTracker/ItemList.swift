@@ -112,4 +112,9 @@ final class ItemList {
         }
         return tasks
     }
+    
+    public func removeTask(task: TaskItem) {
+        task.previousTask?.nextTask = task.nextTask
+        task.nextTask?.previousTask = task.previousTask
+    }
 }
